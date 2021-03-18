@@ -6,13 +6,17 @@ With the LED Matrix library you can:<br>
 
 ## How to install:
 
-### Using x
-`
-Some instructions
-`
-### Using y
-`
-more outline
-`
+### Using Nuget
+
+Using Nuget, you can find the ledmatrix package with the following command:
+```powershell
+Find-Package ledmatrix
+```
+
+Run the install command:
+```powershell
+Install-Package ledmatrix -ProjectName <project to install to>
+```
+
 ### From github
-Do x, then y.
+TODO
