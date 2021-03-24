@@ -132,24 +132,21 @@ namespace ledmatrix
         /// <param name="bitmap">Bitmap to convert to byte[]</param>
         /// <param name="pixelSize">the nth pixel to sample</param>
         /// <returns>Returns a byte[] to be written to LED Matrix</returns>
-        private byte[] BitmapToByteArray(Bitmap bitmap, int pixelSize)
+        public static byte[] BitmapToByteArray(Bitmap bitmap, int pixelSize)
         {
-            BitArray bitArray = new BitArray(new byte[(bitmap.Width / 8) * bitmap.Height]);
+            BitArray bitArray = new BitArray(new byte[8]);
             byte[] result = new byte[8];
 
             int index = 0;
-            for (int y = 0; y < bitmap.Height; y++)
+            for (int y = pixelSize - 1; y < bitmap.Height; y += pixelSize)
             {
-                for (int x = 0; x < bitmap.Width; x++)
+                for (int x = pixelSize - 1; x < bitmap.Width; x += pixelSize)
                 {
-                    if (x % pixelSize == 0 && y % pixelSize == 0)
-                    {
-                        bitArray[index] = bitmap.GetPixel(x, y).R != 0;
-                        index++;
-                    }
+                    Console.WriteLine($"{x} {y}");
+                    bitArray[index] = bitmap.GetPixel(x, y).R != 0;
+                    index++;
                 }
             }
-
             bitArray.CopyTo(result, 0);
             return result;
         }
