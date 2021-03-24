@@ -37,13 +37,13 @@ TODO: Finish
 ### LedMatrix(string comPort, int baudRate, int din, int cs, int clk, int brightness)
 
 ```C#
-LedMatrix lm = new LedMatrix("COM8", 9600, 11, 7, 13, 0);
+LedMatrix lm = new LedMatrix("COM8", 9600);
 // --stuff--
 ```
 
 ### Hello World
 ```C#
-LedMatrix lm = new LedMatrix("COM8", 9600, 11, 7, 13, 0);
+LedMatrix lm = new LedMatrix("COM8", 9600);
 byte[] data = {
   0b10101010,
   0b01010101,
@@ -65,7 +65,7 @@ stuff
 Takes an array of bytes and writes the bytes to the ledmatrix display.
 
 ```C#
-LedMatrix lm = new LedMatrix("COM8", 9600, 11, 7, 13, 0);
+LedMatrix lm = new LedMatrix("COM8", 9600);
 lm.Write(new byte[] {
   0b10101010,
   0b01010101,
@@ -81,7 +81,7 @@ lm.Write(new byte[] {
 
 Takes a filepath to a bitmap as well as the pixelwidth, converts to a byte array, then writes the data to the ledmatrix display.
 ```C#
-LedMatrix lm = new LedMatrix("COM8", 9600, 11, 7, 13, 0);
+LedMatrix lm = new LedMatrix("COM8", 9600);
 lm.Write("C:\dev\my_bmp.bmp", 1);
 ```
 
@@ -89,7 +89,7 @@ lm.Write("C:\dev\my_bmp.bmp", 1);
 
 Sets all leds on the display to off
 ```C#
-LedMatrix lm = new LedMatrix("COM8", 9600, 11, 7, 13, 0);
+LedMatrix lm = new LedMatrix("COM8", 9600);
 lm.ClearScreen();
 ```
 
@@ -98,7 +98,7 @@ lm.ClearScreen();
 Takes a row and a byte to write to the row,
 each bit corresponding to an LED
 ```C#
-LedMatrix lm = new LedMatrix("COM8", 9600, 11, 7, 13, 0);
+LedMatrix lm = new LedMatrix("COM8", 9600);
 lm.SetRow(5, 0b00101010);
 ```
 
@@ -107,13 +107,13 @@ lm.SetRow(5, 0b00101010);
 Takes a row and a byte to write to the column,
 each bit corresponding to an LED
 ```C#
-LedMatrix lm = new LedMatrix("COM8", 9600, 11, 7, 13, 0);
+LedMatrix lm = new LedMatrix("COM8", 9600);
 lm.SetColumn(5, 0b00101010);
 ```
 
 ### ConvertToBitmap(string filePath, string outPath)
 Takes a path to an image and saves it as a bitmap
 ```C#
-LedMatrix lm = new LedMatrix("COM8", 9600, 11, 7, 13, 0);
+LedMatrix lm = new LedMatrix("COM8", 9600);
 lm.ConvertToBitmap("C:\dev\my_png.png", "C:\dev\my_bmp.bmp");
 ```
