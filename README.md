@@ -10,25 +10,20 @@ Feature highlights:<br>
 
 And more helpful features
 
-## How to install:
+## Setup:
 
-### Using Nuget
+To use the LedMatrix you first grab the dll file above, and put it into your project.
+For more information on how to set up a dll file, refer [here](https://www.c-sharpcorner.com/UploadFile/1e050f/creating-and-using-dll-class-library-in-C-Sharp/).
 
-Using Nuget, you can find the ledmatrix package with the following command:
-```powershell
-Find-Package ledmatrix
-```
+You also have to set up the [LedControl](https://github.com/wayoda/LedControl) library. How?
 
-Run the install command:
-```powershell
-Install-Package ledmatrix -ProjectName <project to install to>
-```
+Grab the zip file from that repo, then in the Arduino IDE, navigate to:
 
-### From github
-Install .xip file
-put in project
-etc.
-TODO: Finish
+Sketch > Include Library > Add .ZIP Library. Then select "Add .ZIP Library".
+
+Find the .ZIP file, select it, paste the "ledcontrol.ino" file into the IDE, and you're good to upload.
+
+For more information on .ZIP libraries, refer [here](https://www.arduino.cc/en/guide/libraries).
 
 ## Getting started
 
@@ -59,7 +54,7 @@ stuff
 ```
 
 ### Write(byte[] data)
-### Write(string filePath, int pixelWidth)
+### Write(string filePath, int pixelSize)
 
 
 Takes an array of bytes and writes the bytes to the ledmatrix display.
@@ -82,7 +77,7 @@ lm.Write(new byte[] {
 Takes a filepath to a bitmap as well as the pixelwidth, converts to a byte array, then writes the data to the ledmatrix display.
 ```C#
 LedMatrix lm = new LedMatrix("COM8", 9600);
-lm.Write("C:\dev\my_bmp.bmp", 1);
+lm.Write("C:\dev\my_img.png", 1);
 ```
 
 ### ClearScreen()
@@ -111,9 +106,11 @@ LedMatrix lm = new LedMatrix("COM8", 9600);
 lm.SetColumn(5, 0b00101010);
 ```
 
-### ConvertToBitmap(string filePath, string outPath)
-Takes a path to an image and saves it as a bitmap
+### WriteAnimation(string filePath, int frameDelay, int pixelSize)
+
+Takes the path to the .gif, the length of time before the next frame, and the pixel size.
+
 ```C#
 LedMatrix lm = new LedMatrix("COM8", 9600);
-lm.ConvertToBitmap("C:\dev\my_png.png", "C:\dev\my_bmp.bmp");
+lm.WriteAnimation("C:\dev\my_gif.gif", 1000, 1);
 ```
