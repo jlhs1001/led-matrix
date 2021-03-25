@@ -40,14 +40,29 @@ namespace ledmatrix
                 {
                 }
 
-                _serialPort.Open();
-
                 // Next 8 bytes will be displayed on LED matrix
-                _serialPort.Write(new byte[] {0b00000001}, 0, 1);
-                _serialPort.Write(data, 0, data.Length);
-
-                _serialPort.Close();
+                WriteBytes(new byte[] {0b00000001});
+                WriteBytes(data);
             });
+        }
+
+        private void WriteBytes(byte[] data)
+        {
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    _serialPort.Open();
+                    _serialPort.Write(data, 0, data.Length);
+                    _serialPort.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Failed to write to serial port.");
+                }
+            });
+
+            task.Wait();
         }
 
         /// <summary>
@@ -62,12 +77,9 @@ namespace ledmatrix
             byte[] byteImage = BitmapToByteArray(bitmap, pixelSize);
 
             // Write final product to serial port.
-            _serialPort.Open();
-            _serialPort.Write(new byte[] {0b00000010}, 0, 1);
-            _serialPort.Write(byteImage, 0, 8);
-            _serialPort.Close();
+            WriteBytes(new byte[] {0b00000010});
+            WriteBytes(byteImage);
         }
-
 
         /// <summary>
         /// Set single led to HIGH or LOW
@@ -79,10 +91,8 @@ namespace ledmatrix
         {
             // Sets a single led to either HIGH or LOW depending
             // on the input value
-            _serialPort.Open();
-            _serialPort.Write(new byte[] {0b00000100}, 0, 1);
-            _serialPort.Write(new byte[] {(byte) x, (byte) y, (byte) val}, 0, 3);
-            _serialPort.Close();
+            WriteBytes(new byte[] {0b00000100});
+            WriteBytes(new byte[] {(byte) x, (byte) y, (byte) val});
         }
 
         /// <summary>
@@ -92,10 +102,8 @@ namespace ledmatrix
         /// <param name="value">Value to set row to</param>
         public void SetRow(int row, byte value)
         {
-            _serialPort.Open();
-            _serialPort.Write(new byte[] {0b00000101}, 0, 1);
-            _serialPort.Write(new byte[] {(byte) row, value}, 0, 2);
-            _serialPort.Close();
+            WriteBytes(new byte[] {0b00000101});
+            WriteBytes(new byte[] {(byte) row, value});
         }
 
         /// <summary>
@@ -105,10 +113,8 @@ namespace ledmatrix
         /// <param name="value">Value to set column to</param>
         public void SetColumn(int column, byte value)
         {
-            _serialPort.Open();
-            _serialPort.Write(new byte[] {0b00000110}, 0, 1);
-            _serialPort.Write(new byte[] {(byte) column, value}, 0, 2);
-            _serialPort.Close();
+            WriteBytes(new byte[] {0b00000110});
+            WriteBytes(new byte[] {(byte) column, value});
         }
 
         /// <summary>
@@ -147,6 +153,7 @@ namespace ledmatrix
                     index++;
                 }
             }
+
             bitArray.CopyTo(result, 0);
             return result;
         }
@@ -177,14 +184,12 @@ namespace ledmatrix
                     frames.Add(BitmapToByteArray(bitmap, pixelSize));
                 }
 
-                // open serial port, then tell microcontroller
+                // tell microcontroller
                 // it will be receiving an animation.
                 try
                 {
-                    // try to open the serial port, then
                     // try to tell the device to enter animation mode.
-                    _serialPort.Open();
-                    _serialPort.Write(new byte[] {0b00001000}, 0, 1);
+                    WriteBytes(new byte[] {0b00001000});
                 }
                 catch (Exception e)
                 {
@@ -197,13 +202,13 @@ namespace ledmatrix
                 foreach (byte[] frame in frames)
                 {
                     // Tell device it will receive a new frame.
-                    _serialPort.Write(new byte[] {0b00001000}, 0, 1);
+                    WriteBytes(new byte[] {0b00001000});
                     foreach (byte row in frame)
                     {
                         try
                         {
                             // try to write frame row to the device
-                            _serialPort.Write(new byte[] {row}, 0, 1);
+                            WriteBytes(new byte[] {row});
                         }
                         catch (Exception e)
                         {
@@ -215,9 +220,6 @@ namespace ledmatrix
                     // Add the delay between frames.
                     Thread.Sleep(frameDelay);
                 }
-
-                // finished writing animation, close serial port.
-                _serialPort.Close();
             });
             task.Wait();
         }
@@ -227,17 +229,7 @@ namespace ledmatrix
         /// </summary>
         public void ClearScreen()
         {
-            this._serialPort.Open();
-            this._serialPort.Write(new byte[] {0b00000111}, 0, 1);
-            this._serialPort.Close();
-        }
-
-        /// <summary>
-        /// Close the serial port if needed.
-        /// </summary>
-        public void Dispose()
-        {
-            _serialPort.Close();
+            WriteBytes(new byte[] {0b00000111});
         }
     }
 }
